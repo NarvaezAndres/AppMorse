@@ -133,25 +133,28 @@ class _MorseHomePageState extends State<MorseHomePage> { // Clase que contiene e
 
   // Conversión de Morse a Texto.
   String _morseToText(String morse) {
+    // Si el campo está vacío o contiene solo espacios, no hara nada.
     if (morse.trim().isEmpty) {
-      return ''; 
+      return '';
     }
 
+    // Se crea un mapa invertido para buscar caracteres por código Morse.
     final reversedMorseCode = _morseCode.map((key, value) => MapEntry(value, key));
-    final invalidCodes = morse
-        .split(' ')
-        .where((code) => !reversedMorseCode.containsKey(code))
-        .toList();
 
+    // Dividir el código Morse en partes y eliminar espacios vacíos.
+    final morseParts = morse.split(' ').where((code) => code.isNotEmpty).toList();
+
+    // Verificar si hay códigos Morse no válidos.
+    final invalidCodes = morseParts.where((code) => !reversedMorseCode.containsKey(code)).toList();
+
+    // Si hay códigos no válidos, mostrar un error.
     if (invalidCodes.isNotEmpty) {
       _showError('Códigos Morse no válidos: ${invalidCodes.join(', ')}');
       return '';
     }
 
-    return morse
-        .split(' ')
-        .map((code) => reversedMorseCode[code] ?? '')
-        .join('');
+    // Convertir el código Morse a texto.
+    return morseParts.map((code) => reversedMorseCode[code] ?? '').join('');
   }
 
   // Mostrar errores.
