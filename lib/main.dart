@@ -1,39 +1,51 @@
+// Paquete de flutter que contiene widgets y herramientas para construir interfaces graficas.
 import 'package:flutter/material.dart';
 
+// Punto de entrada de la aplicación.
 void main() {
-  runApp(const MorseApp());
+  // Función para mostrar el widget principal 'MorseApp'.
+  runApp(const MorseApp()); // 
 }
 
-class MorseApp extends StatelessWidget {
-  const MorseApp({super.key});
+// Clase principal de la aplicación.
+class MorseApp extends StatelessWidget { // StatelesWidget indica que este widget no tiene estado mutable.
+  // Constructor de la clase.
+  const MorseApp({super.key}); // super.key le indica a flutter que este widget es único.
 
+  // Configuración del widget.
   @override
+  // Metodo que construye la interfaz gráfica del widget.
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp( // widget que configura la aplicación, define titulo, tema, etc de la app.
       title: 'App: Texto a Código Morse',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.grey),
         useMaterial3: true,
       ),
-      home: const MorseHomePage(),
+      home: const MorseHomePage(), //Especifica la pantalla inicial de la aplicación.
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class MorseHomePage extends StatefulWidget {
+// Widget que representa la pantalla principal.
+class MorseHomePage extends StatefulWidget { //StatefulWidget indica que este tiene un estado mutable.
   const MorseHomePage({super.key});
 
   @override
-  State<MorseHomePage> createState() => _MorseHomePageState();
+  State<MorseHomePage> createState() => _MorseHomePageState(); // createState() crea una instancia de la clase _morseHomePageState.
 }
 
-class _MorseHomePageState extends State<MorseHomePage> {
-  final TextEditingController _textController = TextEditingController();
-  final TextEditingController _morseController = TextEditingController();
+//Clase del estado de la pantalla principal
+class _MorseHomePageState extends State<MorseHomePage> { // Clase que contiene el estado del widget MorseHomePage. Aquí se definira la lógica y los datos que cambian durante la ejecución.
+  // Controla el texto de los campos de texto.
+  final TextEditingController _textController = TextEditingController(); // Controlar el campo de texto normal.
+  final TextEditingController _morseController = TextEditingController(); // Controlat el campo de texto para código Morse.
 
+  // Variable que indica si el botón limpiar debe estar activo (rojo) o inactivo (blanco).
   bool _isClearButtonActive = false;
 
+  // Mapa de caracteres Morse
   final Map<String, String> _morseCode = {
     'A': '.-', 
     'B': '-...', 
@@ -74,13 +86,16 @@ class _MorseHomePageState extends State<MorseHomePage> {
     ' ': '/'
   };
 
+  // Metodos del ciclo de vida.
   @override
-  void initState() {
+  void initState() { // Metodo que se ejecuta cuando el widget se inicializa.
     super.initState();
+    // addListener() metodo que permite escuchar los cambios de los campos de texto y actualiza el estado del bóton limpiar.
     _textController.addListener(_updateClearButtonState);
     _morseController.addListener(_updateClearButtonState);
   }
 
+  // Metodo que se ejecuta cuando el widget se elimina.
   @override
   void dispose() {
     _textController.dispose();
@@ -88,13 +103,15 @@ class _MorseHomePageState extends State<MorseHomePage> {
     super.dispose();
   }
 
-  void _updateClearButtonState() {
+  //Actualización del botón limpiar.
+  void _updateClearButtonState() { // updateClearButtonState() Actualiza el estado del botón limpiar dependiendo de si hay texto en los campos.
     setState(() {
       _isClearButtonActive =
           _textController.text.isNotEmpty || _morseController.text.isNotEmpty;
     });
   }
 
+  // Conversión de texto a Morse.
   String _textToMorse(String text) {
     final invalidChars = text
         .toUpperCase()
@@ -114,6 +131,7 @@ class _MorseHomePageState extends State<MorseHomePage> {
         .join(' ');
   }
 
+  // Conversión de Morse a Texto.
   String _morseToText(String morse) {
     if (morse.trim().isEmpty) {
       return ''; 
@@ -136,6 +154,7 @@ class _MorseHomePageState extends State<MorseHomePage> {
         .join('');
   }
 
+  // Mostrar errores.
   void _showError(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -145,6 +164,7 @@ class _MorseHomePageState extends State<MorseHomePage> {
     );
   }
 
+  // Limpiar campos.
   void _clearFields() {
     setState(() {
       _textController.clear();
@@ -153,6 +173,7 @@ class _MorseHomePageState extends State<MorseHomePage> {
     });
   }
 
+  // Construcción de la interfaz.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
